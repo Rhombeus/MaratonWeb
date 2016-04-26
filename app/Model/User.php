@@ -23,6 +23,14 @@ class User extends AppModel {
         'FriendTo' => array(
             'className' => 'Friend',
             'foreignKey' => 'user_to'
+        ),
+        'GameFrom' => array(
+            'className' => 'Game',
+            'foreignKey' => 'player1'
+        ),
+        'GameTo' => array(
+            'className' => 'Game',
+            'foreignKey' => 'player1'
         )
     );
     var $hasAndBelongsToMany = array(
@@ -31,6 +39,12 @@ class User extends AppModel {
             'joinTable' => 'friends',
             'foreignKey' => 'user_from',
             'associationForeignKey' => 'user_to'
+        ),
+        'UserGame' => array(
+            'className' => 'User',
+            'joinTable' => 'games',
+            'foreignKey' => 'player1',
+            'associationForeignKey' => 'player2'
         )
     );
 
