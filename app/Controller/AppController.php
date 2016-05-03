@@ -31,8 +31,9 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-    public $components = array('DebugKit.Toolbar',
-        'Flash',
+    public $components = array(
+        'DebugKit.Toolbar',
+        'Flash'/*,
         'Auth' => array(
             'loginRedirect' => array(
                 'controller' => 'questions',
@@ -48,10 +49,10 @@ class AppController extends Controller {
                     'passwordHasher' => 'Blowfish'
                 )
             )
-        )
+        )*/
     );
 
     public function beforeFilter() {
-        $this->Auth->allow('index', 'view','add','edit','delete','json','validateAnswer','highscore');
+        //$this->Auth->allow('index', 'view','add','edit','delete','json','validateAnswer','highscore');
     }
 }

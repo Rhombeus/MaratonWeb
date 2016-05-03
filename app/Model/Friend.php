@@ -1,28 +1,42 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+App::uses('AppModel', 'Model');
 /**
- * Description of Friendship
+ * Friend Model
  *
- * @author Alejandro
+ * @property User $user_from
+ * @property User $user_to
  */
 class Friend extends AppModel {
-    var $name = 'Friend';
-    var $displayField = 'id';
 
-      var $belongsTo = array(
-      'UserFrom'=>array(
-      'className'=>'User',
-      'foreignKey'=>'user_from'
-      ),
-      'UserTo'=>array(
-      'className'=>'User',
-      'foreignKey'=>'user_to'
-      )
-      ); 
+/**
+ * Display field
+ *
+ * @var string
+ */
+	public $displayField = 'user_to';
+
+
+	// The Associations below have been created with all possible keys, those that are not needed can be removed
+
+/**
+ * belongsTo associations
+ *
+ * @var array
+ */
+	public $belongsTo = array(
+		'user_from' => array(
+			'className' => 'User',
+			'foreignKey' => 'user_from',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'user_to' => array(
+			'className' => 'User',
+			'foreignKey' => 'user_to',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
 }

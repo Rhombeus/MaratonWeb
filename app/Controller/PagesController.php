@@ -32,7 +32,7 @@ class PagesController extends AppController {
 public function beforeFilter() {
     parent::beforeFilter();
     // Allow users to register and logout.
-    $this->Auth->allow('index', 'view');
+   // $this->Auth->allow('index', 'view');
 }
 /**
  * This controller does not use a model

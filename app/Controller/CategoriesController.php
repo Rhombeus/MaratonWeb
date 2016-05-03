@@ -1,31 +1,193 @@
 <?php
-
 App::uses('AppController', 'Controller');
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of CategoriesController
+ * Categories Controller
  *
- * @author Alejandro
+ * @property Category $Category
+ * @property PaginatorComponent $Paginator
+ * @property FlashComponent $Flash
+ * @property SessionComponent $Session
  */
 class CategoriesController extends AppController {
 
-    var $scaffold;
+/**
+ * Components
+ *
+ * @var array
+ */
+	public $components = array('Paginator', 'Flash', 'Session');
 
-    public function json($id = null) {
-        $this->layout ='json';
-        if (!$id) {
-            throw new NotFoundException(__('Taller inválido'));
-        }
-        $category = $this->Category->findById($id);
-        if (!$category) {
-            throw new NotFoundException(__('Categoria invalida'));
-        }
-        $this->set('category', $category);
-    }
+/**
+ * index method
+ *
+ * @return void
+ */
+	public function index() {
+		$this->Category->recursive = 0;
+		$this->set('categories', $this->Paginator->paginate());
+	}
 
+/**
+ * view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function view($id = null) {
+		if (!$this->Category->exists($id)) {
+			throw new NotFoundException(__('Invalid category'));
+		}
+		$options = array('conditions' => array('Category.' . $this->Category->primaryKey => $id));
+		$this->set('category', $this->Category->find('first', $options));
+	}
+
+/**
+ * add method
+ *
+ * @return void
+ */
+	public function add() {
+		if ($this->request->is('post')) {
+			$this->Category->create();
+			if ($this->Category->save($this->request->data)) {
+				$this->Flash->success(__('The category has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Flash->error(__('The category could not be saved. Please, try again.'));
+			}
+		}
+	}
+
+/**
+ * edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function edit($id = null) {
+		if (!$this->Category->exists($id)) {
+			throw new NotFoundException(__('Invalid category'));
+		}
+		if ($this->request->is(array('post', 'put'))) {
+			if ($this->Category->save($this->request->data)) {
+				$this->Flash->success(__('The category has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Flash->error(__('The category could not be saved. Please, try again.'));
+			}
+		} else {
+			$options = array('conditions' => array('Category.' . $this->Category->primaryKey => $id));
+			$this->request->data = $this->Category->find('first', $options);
+		}
+	}
+
+/**
+ * delete method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function delete($id = null) {
+		$this->Category->id = $id;
+		if (!$this->Category->exists()) {
+			throw new NotFoundException(__('Invalid category'));
+		}
+		$this->request->allowMethod('post', 'delete');
+		if ($this->Category->delete()) {
+			$this->Flash->success(__('The category has been deleted.'));
+		} else {
+			$this->Flash->error(__('The category could not be deleted. Please, try again.'));
+		}
+		return $this->redirect(array('action' => 'index'));
+	}
+
+/**
+ * admin_index method
+ *
+ * @return void
+ */
+	public function admin_index() {
+		$this->Category->recursive = 0;
+		$this->set('categories', $this->Paginator->paginate());
+	}
+
+/**
+ * admin_view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_view($id = null) {
+		if (!$this->Category->exists($id)) {
+			throw new NotFoundException(__('Invalid category'));
+		}
+		$options = array('conditions' => array('Category.' . $this->Category->primaryKey => $id));
+		$this->set('category', $this->Category->find('first', $options));
+	}
+
+/**
+ * admin_add method
+ *
+ * @return void
+ */
+	public function admin_add() {
+		if ($this->request->is('post')) {
+			$this->Category->create();
+			if ($this->Category->save($this->request->data)) {
+				$this->Flash->success(__('The category has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Flash->error(__('The category could not be saved. Please, try again.'));
+			}
+		}
+	}
+
+/**
+ * admin_edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_edit($id = null) {
+		if (!$this->Category->exists($id)) {
+			throw new NotFoundException(__('Invalid category'));
+		}
+		if ($this->request->is(array('post', 'put'))) {
+			if ($this->Category->save($this->request->data)) {
+				$this->Flash->success(__('The category has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Flash->error(__('The category could not be saved. Please, try again.'));
+			}
+		} else {
+			$options = array('conditions' => array('Category.' . $this->Category->primaryKey => $id));
+			$this->request->data = $this->Category->find('first', $options);
+		}
+	}
+
+/**
+ * admin_delete method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_delete($id = null) {
+		$this->Category->id = $id;
+		if (!$this->Category->exists()) {
+			throw new NotFoundException(__('Invalid category'));
+		}
+		$this->request->allowMethod('post', 'delete');
+		if ($this->Category->delete()) {
+			$this->Flash->success(__('The category has been deleted.'));
+		} else {
+			$this->Flash->error(__('The category could not be deleted. Please, try again.'));
+		}
+		return $this->redirect(array('action' => 'index'));
+	}
 }

@@ -1,17 +1,16 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+App::uses('AppModel', 'Model');
+/**
+ * Category Model
+ *
  */
+class Category extends AppModel {
 
 /**
- * Description of Category
+ * Display field
  *
- * @author Alejandro
+ * @var string
  */
-class Category extends AppModel{
-        var $name = 'Category';
-        var $displayField = 'description';
+	public $displayField = 'description';
+
 }

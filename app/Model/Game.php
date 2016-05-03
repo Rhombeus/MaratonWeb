@@ -1,32 +1,42 @@
 <?php
-
 App::uses('AppModel', 'Model');
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of User
+ * Game Model
  *
- * @author Alejandro
+ * @property User $player1
+ * @property User $player2
  */
 class Game extends AppModel {
 
-    var $name = 'Game';
-    var $displayField = 'id';
+/**
+ * Display field
+ *
+ * @var string
+ */
+	public $displayField = 'id';
 
-      var $belongsTo = array(
-      'UserFrom'=>array(
-      'className'=>'User',
-      'foreignKey'=>'player1'
-      ),
-      'UserTo'=>array(
-      'className'=>'User',
-      'foreignKey'=>'player2'
-      )
-      ); 
 
+	// The Associations below have been created with all possible keys, those that are not needed can be removed
+
+/**
+ * belongsTo associations
+ *
+ * @var array
+ */
+	public $belongsTo = array(
+		'player1' => array(
+			'className' => 'User',
+			'foreignKey' => 'player1',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'player2' => array(
+			'className' => 'User',
+			'foreignKey' => 'player2',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
 }
