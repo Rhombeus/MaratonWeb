@@ -1,7 +1,7 @@
 <?php
 
 App::uses('AppController', 'Controller');
-
+App::import('model', 'Game');
 /**
  * Questions Controller
  *
@@ -215,31 +215,61 @@ class QuestionsController extends AppController {
         $this->set('questions', $questions);
     }
 
-    public function validateAnswer($usrid = null, $questionid = null, $answer = null,$gameId=null) {
+   public function validateAnswer($usrid = null, $questionid = null, $answer = null, $gameId = null) {
+        $game = new Game();
+		$savedata=array();
+		$gameSaveData=array();
         parent::loadModel('User', NULL);
         $this->layout = 'json';
         $response = false;
-        if (!$usrid || !$questionid ||!$answer || !gameId) {
-            throw new NotFoundException(__('Missing Parameters'));
-        }else{
-            $question = $this->Question->findById($questionid);
-            $usuario = $this->User->findById($usrid);
+        if (!$gameId) {
+            throw new NotFoundException(__('Juego inválido'));
         }
-        
+        if (!$usrid) {
+            throw new NotFoundException(__('Usuario inválido'));
+        }
+        if (!$questionid) {
+            throw new NotFoundException(__('Pregunta inválida'));
+        }
+        if (!$answer) {
+            throw new NotFoundException(__('Respuesta inválida'));
+        }
+        $question = $this->Question->findById($questionid);
         if (!$question) {
             throw new NotFoundException(__('Pregunta invalida'));
         }
         if ($question['Question']['correct'] == $answer) {
-
-            $juego = $this->Game->findById($gameId);
-            if (!$usuario) {
-                throw new NotFoundException(__('Usuario invalido'));
+            $juego = $game->findById($gameId);
+            $usuario = $this->User->findById($usrid);
+            if (!$usuario || !$juego) {
+                throw new NotFoundException(__('Usuario o juego invalido'));
             }
-            $savedata = array('User' => array(
+            $usrSaveData = array('User' => array(
                     'id' => $usrid,
                     'score' => $usuario['User']['score'] + 1
-            ));          
-            $this->User->save($savedata);
+                )
+            );
+            if ($juego['Game']['player1'] == $usrid) {
+                if ($juego['Game']['p1turn']) {
+                    $gameSaveData = array('Game' => array(
+                            'id' => $gameId,
+                            'p1Score' => $juego['Game']['p1Score'] + 1,
+                            'p1turn' => abs($juego['Game']['p1turn'] - 1)
+                        )
+                    );
+                }
+            } else {
+                if (!$juego['Game']['p1turn']) {
+                    $gameSaveData = array('Game' => array(
+                            'id' => $gameId,
+                            'p2Score' => $juego['Game']['p2Score'] + 1,
+                            'p1turn' => abs($juego['Game']['p1turn'] - 1)
+                        )
+                    );
+                }
+            }
+            $this->User->save($usrSaveData);
+            $game->save($gameSaveData);
             $response = true;
         }
         $this->set('response', $response);

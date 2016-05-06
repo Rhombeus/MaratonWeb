@@ -190,4 +190,19 @@ class GamesController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
+	
+	public function json($id = null) {
+        $this->layout = 'json';
+        if (!$id) {
+            throw new NotFoundException(__('missing parameters'));
+        }
+        $games = $this->Game->find('all', array(
+            'conditions' => array('OR'=>array('player1.id' => $id, 'player2.id'=>$id)),
+            'fields' => array('id','player1.id','player1.username','player2.id','player2.username','p1score','p2score','ingoranciaScore','p1turn')
+        ));
+        if (!$games) {
+            throw new NotFoundException(__('Categoria invalida'));
+        }
+        $this->set('games', $games);
+    }
 }
